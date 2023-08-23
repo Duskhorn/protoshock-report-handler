@@ -1,8 +1,9 @@
 import wNim/[wApp, wFrame, wIcon, wBitmap, wImage, wPanel, wTextCtrl, wButton, wCheckBox, wStaticBitmap, wEvent, wMessageDialog] 
-import httpclient, json, times, osproc, strutils, base64
+import httpclient, json, times, osproc, strutils, net, uri
 
 const ICON = staticRead("assets/icon.ico")
 const HEADER = staticRead("assets/header.jpg")
+const WEB = "http://protoshock-utils.000webhostapp.com/bug-report.php"
 
 let
     app = App(wSystemDpiAware)
@@ -54,8 +55,10 @@ proc getDeviceInfo(): string =
         "GPU max FPS:\t\t" & wmic("path win32_VideoController", "MaxRefreshRate")      
 
 proc sendReport(text: string, info_flag: wId) =
-    var client = newhttpclient(userAgent = "pshock-bug-launch: vbeta; platform: win32; Mozilla: 5.0;")
-    client.headers = newHttpHeaders({"Content-Type" : "application/json"})
+    var client = newhttpclient(
+        userAgent = "pshock-bug-launch: vbeta; platform: win32; Mozilla: 5.0;",
+        headers = newHttpHeaders({"Content-Type" : "application/x-www-form-urlencoded"})
+    )
 
     let
         info = 
@@ -63,20 +66,20 @@ proc sendReport(text: string, info_flag: wId) =
                 getDeviceInfo()
             else: ""
         date = now().utc        
-        body = %*{
-            "error_json": %*{
-                "device_info": info.encode,
-                "bug_report": text.encode,
+        body = encodeQuery({"error_json" : $ %*{
+                "device_info": info,
+                "bug_report": text,
                 "date": $date
             }
-        }
+        }, false)
+
 
     echo $body
 
     try:
-        let response = client.request("https://protoshock-utils.000webhostapp.com/", httpMethod = HttpPost, body = $body)
+        let response = client.request(WEB, httpMethod = HttpPost, body = encodeQuery({"error_json" : body}))
         echo "server response was: ", response.status
-
+        echo response.body
     finally: client.close()
 
 panel.wEvent_Size do ():
