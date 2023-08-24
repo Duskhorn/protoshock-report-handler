@@ -3,7 +3,7 @@ import httpclient, json, times, osproc, strutils, uri, net
 
 const ICON = staticRead("assets/icon.ico")
 const HEADER = staticRead("assets/header.jpg")
-const WEB = "http://protoshock-utils.000webhostapp.com/bug-report.php"
+const WEB = staticRead("secret/web").strip()
 
 let
     app = App(wSystemDpiAware)
