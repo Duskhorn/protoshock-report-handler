@@ -9,7 +9,7 @@ let
     app = App(wSystemDpiAware)
     win = Frame(title = "Protoshock Crash Report Tool", size = (640, 480))
     panel = Panel(win)
-    text = TextCtrl(panel, style = wTeMultiLine, size = (300, 200))
+    text = TextCtrl(panel, style = wTeMultiLine, size = (300, 200), value = "Write your crash report here:")
     send = Button(panel, label = "Send Report")
     info = CheckBox(panel, label = "Include PC specs in the crash report")
     header = HEADER.Image.Icon.Bitmap
