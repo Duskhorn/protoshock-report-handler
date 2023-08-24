@@ -1,5 +1,5 @@
 import wNim/[wApp, wFrame, wIcon, wBitmap, wImage, wPanel, wTextCtrl, wButton, wCheckBox, wStaticBitmap, wEvent, wMessageDialog] 
-import httpclient, json, times, osproc, strutils, net, uri
+import httpclient, json, times, osproc, strutils, uri, net
 
 const ICON = staticRead("assets/icon.ico")
 const HEADER = staticRead("assets/header.jpg")
@@ -73,11 +73,11 @@ proc sendReport(text: string, info_flag: wId) =
             }
         }, false)
 
-
     echo $body
 
     try:
         let response = client.request(WEB, httpMethod = HttpPost, body = encodeQuery({"error_json" : body}))
+        echo "ssl? ", defined(ssl)
         echo "server response was: ", response.status
         echo response.body
     finally: client.close()
