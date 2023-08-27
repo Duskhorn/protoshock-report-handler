@@ -1,5 +1,5 @@
 import wNim/[wApp, wFrame, wIcon, wBitmap, wImage, wPanel, wTextCtrl, wButton, wCheckBox, wStaticBitmap, wEvent, wMessageDialog] 
-import httpclient, json, times, osproc, strutils, uri, net
+import httpclient, json, times, osproc, strutils, uri, net, base64
 
 const ICON = staticRead("assets/icon.ico")
 const HEADER = staticRead("assets/header.jpg")
@@ -67,9 +67,10 @@ proc sendReport(text: string, info_flag: wId) =
             else: ""
         date = now().utc        
         body = encodeQuery({"error_json" : $ %*{
-                "device_info": info,
+                "device_info": info.encode(),
                 "bug_report": text,
-                "date": $date
+                "date": $date.year & "-" & $date.month & "-" & $date.monthday,
+                "time": $date.hour & ":" & $date.minute & ":" & $date.second
             }
         }, false)
 
