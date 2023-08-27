@@ -76,8 +76,7 @@ proc sendReport(text: string, info_flag: wId) =
     echo $body
 
     try:
-        let response = client.request(WEB, httpMethod = HttpPost, body = encodeQuery({"error_json" : body}))
-        echo "ssl? ", defined(ssl)
+        let response = client.request(WEB, httpMethod = HttpPost, body = body)
         echo "server response was: ", response.status
         echo response.body
     finally: client.close()
