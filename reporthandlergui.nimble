@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.0"
+version       = "1.0.0-RC1"
 author        = "Duskhorn"
 description   = "crash handler gui for the Protoshock game"
 license       = "GPL-3.0-or-later"
