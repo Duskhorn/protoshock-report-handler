@@ -39,7 +39,7 @@ proc layout() =
 
 proc getDeviceInfo(): string = 
     proc wmic(s, k: string): string =
-        let (output, _) = execCmdEx("wmic " & s & " get " & k)
+        let (output, _) = execCmdEx("wmic " & s & " get " & k, options = {poDaemon, poEvalCommand})
         return output.strip.split("\n")[^1]
 
     return 
