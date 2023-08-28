@@ -1,4 +1,4 @@
-import wNim/[wApp, wFrame, wIcon, wBitmap, wImage, wPanel, wTextCtrl, wButton, wCheckBox, wStaticBitmap, wEvent, wMessageDialog] 
+import wNim/[wApp, wFrame, wIcon, wBitmap, wImage, wPanel, wTextCtrl, wButton, wCheckBox, wStaticBitmap, wStaticText, wEvent, wMessageDialog] 
 import httpclient, json, times, osproc, strutils, uri, net, base64
 
 const ICON = staticRead("assets/icon.ico")
@@ -9,32 +9,33 @@ let
     app = App(wSystemDpiAware)
     win = Frame(title = "Protoshock Crash Report Tool", size = (640, 480))
     panel = Panel(win)
-    text = TextCtrl(panel, style = wTeMultiLine, size = (300, 200), value = "Write your crash report here:")
-    send = Button(panel, label = "Send Report")
+    text = StaticText(panel, label = "Write your crash report here", style = wAlignCenter or wAlignMiddle)
+    area = TextCtrl(panel, style = wTeMultiLine, size = (100, 100))
+    send = Button(panel, label = "Send Report", size = (50, 50))
     info = CheckBox(panel, label = "Include PC specs in the crash report")
     header = HEADER.Image.Icon.Bitmap
     head = StaticBitmap(panel, bitmap = header)
     icon = Image(ICON)
 
 win.icon = Icon(icon)
-win.foregroundColor = wBlack
-win.backgroundColor = wBlack
 
 panel.backgroundColor = wBlack
+text.backgroundColor = wGrey
 
 info.setValue(true)
 
-text.foregroundColor = wWhite
-text.backgroundColor = wDarkGrey
+area.foregroundColor = wWhite
+area.backgroundColor = wDarkGrey
 
 proc layout() = 
     panel.autolayout """
-        spacing: 10
+        spacing: 8
         H:|-[head]-|
         H:|-[text]-|
+        H:|-[area]-|
         H:|-[info]-|
         H:|-[send]-|
-        V:|-[head(50%)]-[text]-[info]-[send]-|
+        V:|-[head(45%)]-[text]-2-[area]-[info(5%)]-[send(5%)]-|
     """
 
 proc getDeviceInfo(): string = 
@@ -91,7 +92,8 @@ send.wEvent_Button do ():
         let msg = MessageDialog(win, caption = "Are you sure you want to send your PC data?", message = " Here's what we'll collect:\nOS name, version;\nCPU name, vendor, clock frequency;\ntotal and free RAM;\nGPU name, driver version and max FPS allowed by GPU", style = wYesNo or wIconQuestion)
         confirm = msg.showModal()
 
-    let t = text.getValue()     
+    let t = area.getValue()
+    send.label = "Sending report..."     
     sendReport(t, confirm)
     win.close()
 
