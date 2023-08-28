@@ -15,7 +15,12 @@ Made for the ProtoShock game
 ### Install dependencies
 
 ```sh
-$ nimble install winim
+$ nimble install -d
+```
+
+Or, if that doesn't work:
+
+```sh
 $ nimble install wNim
 ```
 
