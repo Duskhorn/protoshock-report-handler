@@ -11,5 +11,4 @@ bin           = @["reporthandlergui"]
 # Dependencies
 
 requires "nim >= 2.0.0"
-requires "wNim"
-requires "winim"
+requires "wNim >= 0.13.3"
